@@ -1,0 +1,168 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+    >gulp-serve (v1.4.0)</a>
+</h1>
+<h4>Serve your assets</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-serve">module gulp-serve</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-serve.gulp-serve">
+            function <span class="apidocSignatureSpan"></span>gulp-serve
+            <span class="apidocSignatureSpan">(config)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-serve" id="apidoc.module.gulp-serve">module gulp-serve</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-serve.gulp-serve" id="apidoc.element.gulp-serve.gulp-serve">
+        function <span class="apidocSignatureSpan"></span>gulp-serve
+        <span class="apidocSignatureSpan">(config)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">gulp-serve = function (config) {
+  config || (config = {});
+  return function () {
+    var app = connect();
+    if (typeof config === &#x27;string&#x27;) {
+      config = {
+        root: [config]
+      };
+    }
+
+    if (Array.isArray(config)) {
+      config = {
+        root: config
+      };
+    }
+
+    if (!config.root) {
+      config.root = [&#x27;.&#x27;];
+    }
+
+    if (!config.hostname) {
+      config.hostname = &#x27;localhost&#x27;;
+    }
+
+    if (typeof config.root === &#x27;string&#x27;) {
+      config.root = [config.root];
+    }
+
+    if (!config.middlewares) {
+      config.middlewares = [];
+    }
+
+    if (config.middleware) {
+      config.middlewares.push(config.middleware);
+    }
+
+    config.middlewares.forEach(function(middleware) {
+      app.use(middleware);
+    });
+
+    config.root.forEach(function (path) {
+      app.use(serveStatic(path));
+    });
+
+    if (!config.port) {
+      config.port = 3000;
+    }
+
+    var serverInitFunction = function () {
+      var addr = server.address();
+      var address = addr.address;
+      var port = addr.port;
+      var scheme = &#x27;http&#x27; + (config.https ? &#x27;s&#x27; : &#x27;&#x27;);
+      util.log(util.colors.blue(&#x27;Server started at &#x27; + scheme + &#x27;://&#x27; + address + &#x27;:&#x27; + port));
+    };
+
+    if (config.https) {
+      var opts = {
+        key: fs.readFileSync(config.https.key  || path.join(__dirname, &#x27;ssl/localhost.key&#x27;)),
+        cert: fs.readFileSync(config.https.cert  || path.join(__dirname, &#x27;ssl/localhost.pem&#x27;)),
+        ciphers: config.https.ciphers || &#x27;EDH+CAMELLIA:EDH+aRSA:EECDH+aRSA+AESGCM:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH:+CAMELLIA256
+:+AES256:+CAMELLIA128:+AES128:+SSLv3:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ECDSA:CAMELLIA256-SHA:AES256-SHA:CAMELLIA128
+-SHA:AES128-SHA&#x27; // Intermediat Ciphers from https://wiki.mozilla.org/Security/Server_Side_TLS
+      };
+
+      var server = https.createServer(opts, app).listen(config.port, config.hostname, serverInitFunction);
+    } else {
+      var server = http.createServer(app).listen(config.port, config.hostname, serverInitFunction);
+    }
+  };
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
